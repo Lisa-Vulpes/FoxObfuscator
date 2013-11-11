@@ -1,0 +1,4 @@
+FoxObfuscator
+=============
+
+Obfuscate your JavaScript
