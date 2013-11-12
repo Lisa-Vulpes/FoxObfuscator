@@ -78,22 +78,34 @@ public class ReplaceObfuscation {
 		int randomNumberForKeyCharacter = 0;
 		
 		stringBuilder.append("'");
-		int i = 0;
-		while (i < ch.length) {
+		int counter = 0;
+		while (counter < ch.length) {
 			randomNumberForObfuscateRatio = random.nextInt(100);
 			randomNumberForKeyCharacter = random.nextInt(keyCharacter.length);
 			if (threshold < randomNumberForObfuscateRatio) {
 				stringBuilder.append(keyCharacter[randomNumberForKeyCharacter]);
 			} else {
-				stringBuilder.append(ch[i]);
-				i++;
+				stringBuilder.append(ch[counter]);
+				counter++;
 			}
 		}
 		
 		/*
-		 * コードの終わりを整える。
+		 * エスケープ文字の挿入などのコード整形処理。
 		 */
 		stringBuilder.append("'.replace(/");
+		for (int i = 0; i < keyCharacter.length; i++) {
+			if (isNeedsEscape(keyCharacter[i])) {
+				stringBuilder.append("\\" + keyCharacter[i]);
+			} else {
+				stringBuilder.append(keyCharacter[i]);
+			}
+			if (i != keyCharacter.length - 1) {
+				stringBuilder.append("|");
+			}
+		}
+		stringBuilder.append("/ig, '');");
+		replaceObfuscatedCode = stringBuilder.toString();
 		
 		return replaceObfuscatedCode;
 	}
@@ -115,5 +127,28 @@ public class ReplaceObfuscation {
 		keyCharacterList.add("@");
 		
 		return keyCharacterList;
+	}
+	
+	/**
+	 * 対象となる難読化文字にエスケープ処理が必要かどうかを判定します。
+	 * エスケープ文字が必要ならtrueを、それ以外ならfalseを返します。
+	 * 
+	 * @param character 判定を行いたい難読化文字
+	 * @return エスケープ文字が必要ならtrue、それ以外ならfalse
+	 */
+	private boolean isNeedsEscape(String character) {
+		if (character.matches("\\(")) {
+			return true;
+		} else if (character.matches("\\)")) {
+			return true;
+		} else if (character.matches("\\$")) {
+			return true;
+		} else if (character.matches("\\^")) {
+			return true;
+		} else if (character.matches("\\!")) {
+			return true;
+		} else {
+			return false;
+		}
 	}
 }
