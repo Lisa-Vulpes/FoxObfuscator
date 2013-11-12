@@ -6,7 +6,7 @@ package ru.ruskyhosting.lisa.FoxObfuscator;
  * @author Lisa
  *
  */
-public class MainTest {
+public class MethodTest {
 	public static void main(String[] args) {
 		String code = "Hello World";
 		ReplaceObfuscation replaceObfuscation = new ReplaceObfuscation(code);
