@@ -30,15 +30,30 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Random;
 
+/**
+ * 文字列置換によって難読化を行うクラスです。
+ *  
+ * @author Lisa
+ */
 public class ReplaceObfuscation {
 	private String targetCode = null;
 	private ArrayList<String> keyCharacterList = null;
 	
+	/**
+	 * 文字列置換によって難読化を行うコンストラクタです。
+	 * 
+	 * @param code 難読化を行いたいコード
+	 */
 	ReplaceObfuscation(String code) {
 		targetCode = code;
 		keyCharacterList = getObfuscateCharacter();
 	}
 	
+	/**
+	 * 文字列置換によって難読化を行います。
+	 * 
+	 * @return 難読化が施されたコード。
+	 */
 	public String replaceObfuscation() {
 		String replaceObfuscatedCode = null;
 
