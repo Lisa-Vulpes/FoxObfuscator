@@ -9,7 +9,11 @@ package ru.ruskyhosting.lisa.FoxObfuscator;
 public class MethodTest {
 	public static void main(String[] args) {
 		String code = "Hello World";
-		ReplaceObfuscation replaceObfuscation = new ReplaceObfuscation(code);
-		System.out.println(replaceObfuscation.replaceObfuscation());
+		
+		Obfuscator obfuscator1 = new Obfuscator(code);
+		Obfuscator obfuscator2 = new Obfuscator(code, "#");
+		
+		System.out.println(obfuscator1.replaceObfuscation());
+		System.out.println(obfuscator2.escapeObfuscation());
 	}
 }
