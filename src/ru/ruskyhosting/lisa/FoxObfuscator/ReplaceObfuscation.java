@@ -34,6 +34,7 @@ import java.util.Random;
  * 文字列置換によって難読化を行うクラスです。
  *  
  * @author Lisa
+ * @deprecated 代用クラス作成のため
  */
 public class ReplaceObfuscation {
 	private String targetCode = null;

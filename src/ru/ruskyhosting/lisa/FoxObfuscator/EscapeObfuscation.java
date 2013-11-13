@@ -31,6 +31,7 @@ package ru.ruskyhosting.lisa.FoxObfuscator;
  * 文字列のエスケープ処理によって難読化を行うクラスです。
  * 
  * @author Lisa
+ * @deprecated 代用クラス作成のため
  */
 public class EscapeObfuscation {
 	private String targetCode = null;
