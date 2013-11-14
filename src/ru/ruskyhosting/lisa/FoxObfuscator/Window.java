@@ -50,27 +50,34 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
 public class Window extends JFrame implements ActionListener {
-	final Engine engine = new Engine();
-	final int width = 600;
-	final int height = 600;
-	JPanel[] panel;
-	JMenu[] menu;
-	JMenuItem[] menuItem1;
-	JMenuItem[] menuItem2;
-	JTextArea[] textArea;
-	JScrollPane[] scrollPane;
-	JButton[] button;
-	JRadioButton[] radio;
-	JButton infoButton;
-	final String[] keyCharArray = { "%", "@", "#", "$", "<" };
-	final String dialogTitle = "Fox JavaScript Obfuscator beta1.0";
-	final String information = "Fox JavaScript Obfuscator beta1.0 (http://www.firefly.kutc.kansai-u/ac/jp/~lisa7/) \r\n"
+	private Engine engine = new Engine();
+	private final Obfuscator obfuscator1 = null;
+	private final Obfuscator obfuscator2 = null;
+	private final static int width = 600;
+	private final static int height = 600;
+	private JPanel[] panel;
+	private JMenu[] menu;
+	private JMenuItem[] menuItem1;
+	private JMenuItem[] menuItem2;
+	private JTextArea[] textArea;
+	private JScrollPane[] scrollPane;
+	private JButton[] button;
+	private JRadioButton[] radio;
+	private JButton infoButton;
+	private final static String[] keyCharArray = { "%", "@", "#", "$", "<" };
+	private final static String dialogTitle = "Fox Obfuscator beta1.0";
+	private final static String information = "Fox Obfuscator beta1.0 (http://lisa.ruskyhosting.ru/) \r\n"
 					+ "Cross-platform JavaScript obufuscator, like Gumbler code. \r\n"
 					+ "\r\n"
-					+ "Copyright (C) 2013 Lisa Earthlight - lisa_kud@mail.ru \r\n";
-
-	public Window(String programName) {
-		setTitle(programName);
+					+ "Copyright (C) 2013 Lisa - lisa_kud@mail.ru \r\n";
+	
+	/**
+	 * メインウインドウのコンストラクタです。
+	 * 
+	 * @param programName プログラム名
+	 */
+	public Window() {
+		setTitle("Fox Obfuscator beta1.0");
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		setResizable(false);
 		setSize(width, height);
@@ -79,112 +86,92 @@ public class Window extends JFrame implements ActionListener {
 		/*
 		 * 画面左上のアイコンを設定する。
 		 */
-		ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource("icon.png"));
-		ImageIcon icon2 = new ImageIcon(getClass().getClassLoader().getResource("icon_small.png"));
-		setIconImage(icon.getImage());
+		ImageIcon icon2 = null;
+		try {
+			ImageIcon icon = new ImageIcon(getClass().getClassLoader().getResource("/res/icon.png"));
+			icon2 = new ImageIcon(getClass().getClassLoader().getResource("/res/icon_small.png"));
+			setIconImage(icon.getImage());
+		} catch (NullPointerException e) {
+			icon2 = null;
+		}
 
 		// メニューバーを作成する．
 		JMenuBar menuBar = new JMenuBar();
 
-		// メニューを作成する．
+		
+		/*
+		 * メニューの内容を設定する。
+		 * メニューは、FileとSettingの2種類とする。
+		 */
 		String[] menuArray = { "File", "Setting" };
 		menu = new JMenu[menuArray.length];
 		for (int i = 0; i < menuArray.length; i++) {
-			System.out.println(menuArray[i]);
 			menu[i] = new JMenu(menuArray[i]);
 		}
-
-		// メニューの内容を作成する．
-		// Fileメニュー
 		String[] fileMenuArray = { "New", "Load", "Save", "Exit" };
 		menuItem1 = new JMenuItem[fileMenuArray.length];
 		for (int i = 0; i < fileMenuArray.length; i++) {
 			menuItem1[i] = new JMenuItem(fileMenuArray[i]);
 		}
-		// Settingメニュー
 		String[] settingMenuArray = { "Escape", "Replace" };
 		menuItem2 = new JMenuItem[settingMenuArray.length];
 		for (int i = 0; i < settingMenuArray.length; i++) {
 			menuItem2[i] = new JMenuItem(settingMenuArray[i]);
 		}
 
-		// Declaration of panels.
+		/*
+		 * パネルを設定する。
+		 * 書くパネルの役割は以下の通り。
+		 *  0: ベースパネル
+		 *  1: オプションバーパネル
+		 *  2: 入力テキストエリアパネル
+		 *  3: ボタンパネル
+		 *  4: 出力テキストエリアパネル
+		 */
 		panel = new JPanel[5];
 		for (int i = 0; i < panel.length; i++) {
 			panel[i] = new JPanel();
 		}
-
-		// Definition of size of panels.
-		// Panel number increases from top to bottom except 0.
-		// 0 : base panel
-		// 1 : option panel
-		// 2 : input text area panel
-		// 3 : buttons panel
-		// 4 : output text area panel
 		int[] panelHeightArray = { 600, 50, 250, 50, 250 };
 		for (int i = 0; i < panelHeightArray.length; i++) {
-			// Width is fixed.
 			panel[i].setPreferredSize(new Dimension(600, panelHeightArray[i]));
 		}
 
-		// Definition of panel color to panels.
-		// It will delete when release.
 		/*
-		 * @Deprecated Color[] panelColorArray = {Color.BLACK, Color.RED,
-		 * Color.ORANGE, Color.YELLOW, Color.CYAN}; for (int i = 0; i <
-		 * panelColorArray.length; i++) {
-		 * panel[i].setBackground(panelColorArray[i]); }
+		 * テキストエリアの設定。
+		 * 上下2つ設置し、スクロールを可能にする。
 		 */
-
-		// Declaration of text area.
-		// 0 : input text area
-		// 1 : output text area
 		textArea = new JTextArea[2];
 		for (int i = 0; i < textArea.length; i++) {
 			textArea[i] = new JTextArea();
 		}
-
-		// Definition of text area.
-		// To enable scroll text area, finally textArea changes and renames to
-		// scrollPane.
 		scrollPane = new JScrollPane[textArea.length];
 		for (int i = 0; i < textArea.length; i++) {
-			// Set font.
 			textArea[i].setFont(new Font("Arial", Font.PLAIN, 20));
-			// Set line-wrap.
 			textArea[i].setLineWrap(true);
-			// Set tab size for 2em.
 			textArea[i].setTabSize(2);
-			// Enable scroll on text area.
 			scrollPane[i] = new JScrollPane(textArea[i]);
 		}
 
-		// Declaration of buttons.
-		// 0 : clear input text area
-		// 1 : obfuscate
-		// 2 : decode
-		// 3 : clear output text area
-		button = new JButton[4];
-		String[] buttonLabelArray = { "Clear", "Obfuscate", "Decode", "Clear" };
+		/*
+		 * ボタンの設定。
+		 * 上テキストエリアのクリア、難読化、下テキストエリアのクリアの3種類。
+		 */
+		button = new JButton[3];
+		String[] buttonLabelArray = { "Clear", "Obfuscate", "Clear" };
 		for (int i = 0; i < button.length; i++) {
 			button[i] = new JButton(buttonLabelArray[i]);
 		}
-
-		// Definition of buttons action.
 		for (int i = 0; i < button.length; i++) {
 			button[i].addActionListener(this);
 		}
 
-		// Definition of radio buttons.
-		// Radio buttons are in use set key character.
-		// Key Character means character code's head character likes "%"09.
+		//エスケープ処理に使用する文字を決定する。標準は"%"
 		radio = new JRadioButton[5];
 		for (int i = 0; i < radio.length; i++) {
 			if (i == 0) {
-				// Default selected is "%".
 				radio[i] = new JRadioButton(keyCharArray[i], true);
 			} else {
-				// Others are "@", "$", "#", "<".
 				radio[i] = new JRadioButton(keyCharArray[i]);
 			}
 		}
@@ -196,8 +183,7 @@ public class Window extends JFrame implements ActionListener {
 		infoButton.setContentAreaFilled(false);
 		infoButton.setFocusPainted(false);
 
-		// Definition of radio button group.
-		// All radio buttons are same group.
+		// ラジオボタンの作成。全て同じグループとする。
 		ButtonGroup group = new ButtonGroup();
 		for (int i = 0; i < radio.length; i++) {
 			group.add(radio[i]);
@@ -291,7 +277,7 @@ public class Window extends JFrame implements ActionListener {
 		}
 		// Right clear button.
 		// Clear output text area.
-		if (event.getSource() == button[3]) {
+		if (event.getSource() == button[2]) {
 			textArea[1].setText("");
 		}
 		// Info button.
