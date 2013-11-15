@@ -31,7 +31,8 @@ import javax.swing.JFrame;
 
 public class Main extends JFrame {
 	public static void main(String[] args) {
-		Window window = new Window();
+//		Window window = new Window();
+		WindowTest window = new WindowTest();
 		window.setVisible(true);
 	}
 }
