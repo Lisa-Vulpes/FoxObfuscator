@@ -32,10 +32,18 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 import javax.swing.BoxLayout;
+import javax.swing.ButtonGroup;
+import javax.swing.JButton;
 import javax.swing.JFrame;
+import javax.swing.JMenu;
+import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import javax.swing.JPanel;
+import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 
@@ -44,13 +52,21 @@ import javax.swing.JTextArea;
  * 
  * @author Lisa
  */
-public class WindowTest extends JFrame {
+// TODO: カードパネルを用いて難読化方式が切り替えられるようにする。
+public class WindowTest extends JFrame implements ActionListener {
 	private final static int WINDOW_WIDTH = 600;
 	private final static int WINDOW_HEIGHT = 600;
 	
-	private JPanel panel[];
-	private JTextArea textArea[];
-	private JScrollPane scrollPane[];
+	private JPanel[] panel;
+	private JMenuBar menuBar;
+	private JMenu[] menu;
+	private JMenuItem[] menuItem1;
+	private JRadioButtonMenuItem[] menuItem2;
+	private ButtonGroup menuButtonGroup;
+	private ButtonGroup optionButtonGroup;
+	private JTextArea[] textArea;
+	private JScrollPane[] scrollPane;
+	private JButton[] button;
 	
 	/**
 	 * メインウインドウのコンストラクタです。
@@ -64,9 +80,12 @@ public class WindowTest extends JFrame {
 		setLocationRelativeTo(null);
 		
 		setPanel();
+		setMenu();
 		setPanelLayout();
+		setOption();
 		setPanelColor();
 		setTextArea();
+		setButton();
 		windowFinalize();
 	}
 	
@@ -87,6 +106,49 @@ public class WindowTest extends JFrame {
 		for (int i = 1; i < panel.length; i++) {
 			panel[0].add(panel[i]);
 		}
+	}
+	
+	/**
+	 * オプションパネルをセットします。
+	 */
+	private void setOption() {
+		
+	}
+	
+	private void setMenu() {
+		menuBar = new JMenuBar();
+		
+		/* メニューを作成 */
+		String menuLabelArray[] = {"File", "Setting"};
+		menu = new JMenu[menuLabelArray.length];
+		for (int i = 0; i < menuLabelArray.length; i++) {
+			menu[i] = new JMenu(menuLabelArray[i]);
+			menuBar.add(menu[i]);
+		}
+		
+		/* Fileメニューの項目を設置 */
+		String menuItemLabelArray1[] = {"New", "Load", "Save", "Exit"};
+		menuItem1 = new JMenuItem[menuItemLabelArray1.length];
+		for (int i = 0; i < menuItemLabelArray1.length; i++) {
+			menuItem1[i] = new JMenuItem(menuItemLabelArray1[i]);
+			menuItem1[i].addActionListener(this);
+			menu[0].add(menuItem1[i]);
+		}
+		
+		/* Settingメニューの項目を設置 */
+		String menuItemLabelArray2[] = {"Escape", "Replace"};
+		menuItem2 = new JRadioButtonMenuItem[menuItemLabelArray2.length];
+		menuButtonGroup = new ButtonGroup();
+		for (int i = 0; i < menuItemLabelArray2.length; i++) {
+			menuItem2[i] = new JRadioButtonMenuItem(menuItemLabelArray2[i]);
+			menuButtonGroup.add(menuItem2[i]);
+			menu[1].add(menuItem2[i]);
+		}
+		menuItem2[0].setSelected(true);
+		
+		setJMenuBar(menuBar);
+
+		
 	}
 	
 	/**
@@ -125,7 +187,23 @@ public class WindowTest extends JFrame {
 	}
 	
 	/**
+	 * ボタンをセットします。
+	 */
+	private void setButton() {
+		panel[3].setLayout(new GridLayout(1, 4));
+		button = new JButton[3];
+		String[] buttonLabelArray = {"Clear", "Obfuscate", "Clear"};
+		for (int i = 0; i < button.length; i++) {
+			button[i] = new JButton(buttonLabelArray[i]);
+//			button[i].addActionListener(this);
+			panel[3].add(button[i]);
+		}
+		
+	}
+	
+	/**
 	 * 確認のためパネルに色をつけます。
+	 * 
 	 * @deprecated リリース時には削除
 	 */
 	private void setPanelColor() {
@@ -141,6 +219,37 @@ public class WindowTest extends JFrame {
 	 */
 	private void windowFinalize() {
 		getContentPane().add(panel[0], BorderLayout.CENTER);
+	}
+	
+	/**
+	 * アクションイベントです。
+	 * 
+	 * @param actionEvent アクションイベント
+	 */
+	public void actionPerformed(ActionEvent actionEvent) {
+		if (actionEvent.getSource() == menuItem1[0]) {
+			textArea[0].setText("");
+			textArea[1].setText("");
+		}
+		if (actionEvent.getSource() == menuItem1[1]) {
+			// TODO: ファイルの読み込み
+		}
+		if (actionEvent.getSource() == menuItem1[2]) {
+			// TODO: ファイルの保存
+		}
+		if (actionEvent.getSource() == menuItem1[3]) {
+			System.exit(0);
+		}
+		if (actionEvent.getSource() == menuItem2[0]) {
+			// TODO: エスケープオプションに切り替え
+		}
+		if (actionEvent.getSource() == menuItem2[1]) {
+			// TODO: 文字列置換オプションに切り替え
+		}
+		if (actionEvent.getSource() == button[0]) {
+			textArea[0].setText("");
+		}
+		// TODO: ボタンの機能の実装
 	}
 
 }
