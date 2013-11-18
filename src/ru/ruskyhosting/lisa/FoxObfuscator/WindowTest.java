@@ -28,6 +28,7 @@
 package ru.ruskyhosting.lisa.FoxObfuscator;
 
 import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -57,6 +58,7 @@ public class WindowTest extends JFrame implements ActionListener {
 	private final static int WINDOW_WIDTH = 600;
 	private final static int WINDOW_HEIGHT = 600;
 	
+	private CardLayout cardLayout;
 	private JPanel[] panel;
 	private JMenuBar menuBar;
 	private JMenu[] menu;
@@ -93,9 +95,16 @@ public class WindowTest extends JFrame implements ActionListener {
 	 * メインウインドウに使用するパネルをセットします。
 	 */
 	private void setPanel() {
-		/* 使用するパネルの定義 */
-		panel = new JPanel[5];
-		int[] panelHeightArray = {600, 50, 250, 50, 250};
+		/* 使用するパネルの定義 
+		 *  0: ベースパネル
+		 *  1: オプションパネル(エスケープ処理)
+		 *  2: テキストパネル(上)
+		 *  3: ボタンパネル
+		 *  4: テキストパネル(下)
+		 *  5: オプションパネル(文字列置換)
+		 */
+		panel = new JPanel[6];
+		int[] panelHeightArray = {600, 50, 250, 50, 250, 50};
 		for (int i = 0; i < panel.length; i++) {
 			panel[i] = new JPanel();
 			panel[i].setPreferredSize(new Dimension(600, panelHeightArray[i]));
@@ -106,6 +115,9 @@ public class WindowTest extends JFrame implements ActionListener {
 		for (int i = 1; i < panel.length; i++) {
 			panel[0].add(panel[i]);
 		}
+		
+		/* カードレイアウトの初期化 */
+		cardLayout = new CardLayout();
 	}
 	
 	/**
@@ -141,6 +153,7 @@ public class WindowTest extends JFrame implements ActionListener {
 		menuButtonGroup = new ButtonGroup();
 		for (int i = 0; i < menuItemLabelArray2.length; i++) {
 			menuItem2[i] = new JRadioButtonMenuItem(menuItemLabelArray2[i]);
+			menuItem2[i].addActionListener(this);
 			menuButtonGroup.add(menuItem2[i]);
 			menu[1].add(menuItem2[i]);
 		}
@@ -212,6 +225,7 @@ public class WindowTest extends JFrame implements ActionListener {
 		panel[2].setBackground(Color.YELLOW);
 		panel[3].setBackground(Color.ORANGE);
 		panel[4].setBackground(Color.BLUE);
+		panel[5].setBackground(Color.CYAN);
 	}
 	
 	/**
@@ -242,9 +256,13 @@ public class WindowTest extends JFrame implements ActionListener {
 		}
 		if (actionEvent.getSource() == menuItem2[0]) {
 			// TODO: エスケープオプションに切り替え
+			panel[0].remove(panel[5]);
+			panel[0].add(panel[1]);
 		}
 		if (actionEvent.getSource() == menuItem2[1]) {
 			// TODO: 文字列置換オプションに切り替え
+			panel[0].remove(panel[1]);
+			panel[0].add(panel[5]);
 		}
 		if (actionEvent.getSource() == button[0]) {
 			textArea[0].setText("");
