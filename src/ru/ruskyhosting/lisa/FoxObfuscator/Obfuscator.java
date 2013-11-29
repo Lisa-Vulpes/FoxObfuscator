@@ -89,10 +89,10 @@ public class Obfuscator {
 		 * 難読化文字定義リストをシャッフルし、頭から先に決めた
 		 * 使用個数分を難読化に使用する。
 		 */
-		String[] keyCharacter = new String[quantyKeyCharacter];
+		String[] keyCharacters = new String[quantyKeyCharacter];
 		Collections.shuffle(keyCharacterList);
 		for (int i = 0; i < quantyKeyCharacter; i++) {
-			keyCharacter[i] = keyCharacterList.get(i);
+			keyCharacters[i] = keyCharacterList.get(i);
 		}
 		
 		/*
@@ -109,9 +109,9 @@ public class Obfuscator {
 		int counter = 0;
 		while (counter < ch.length) {
 			randomNumberForObfuscateRatio = random.nextInt(100);
-			randomNumberForKeyCharacter = random.nextInt(keyCharacter.length);
-			if (threshold < randomNumberForObfuscateRatio) {
-				stringBuilder.append(keyCharacter[randomNumberForKeyCharacter]);
+			randomNumberForKeyCharacter = random.nextInt(keyCharacters.length);
+			if (randomNumberForObfuscateRatio < threshold) {
+				stringBuilder.append(keyCharacters[randomNumberForKeyCharacter]);
 			} else {
 				stringBuilder.append(ch[counter]);
 				counter++;
@@ -122,13 +122,13 @@ public class Obfuscator {
 		 * エスケープ文字の挿入などのコード整形処理。
 		 */
 		stringBuilder.append("'.replace(/");
-		for (int i = 0; i < keyCharacter.length; i++) {
-			if (isNeedsEscape(keyCharacter[i])) {
-				stringBuilder.append("\\" + keyCharacter[i]);
+		for (int i = 0; i < keyCharacters.length; i++) {
+			if (isNeedsEscape(keyCharacters[i])) {
+				stringBuilder.append("\\" + keyCharacters[i]);
 			} else {
-				stringBuilder.append(keyCharacter[i]);
+				stringBuilder.append(keyCharacters[i]);
 			}
-			if (i != keyCharacter.length - 1) {
+			if (i != keyCharacters.length - 1) {
 				stringBuilder.append("|");
 			}
 		}
